@@ -1,7 +1,7 @@
 use cotton::prelude::*;
 use multistream_batch::MultistreamBatchChannel;
 use multistream_batch::Command::*;
-use std::io::BufReader;
+use std::io::{BufReader, BufWriter};
 use std::time::Duration;
 use regex::Regex;
 
@@ -44,7 +44,7 @@ struct Cli {
     max_duration_ms: u64,
 }
 
-fn main() {
+fn main() -> Result<(), Problem> {
     let args = Cli::from_args();
     init_logger(&args.logging, vec![module_path!()]);
 
@@ -61,7 +61,7 @@ fn main() {
                 let line = stream_id_regex.replace(&line, "").into_owned();
                 (stream_id, line)
             } else {
-                (None, line.to_owned())
+                (None, line)
             };
 
             let matched = pattern.is_match(&line);
@@ -89,23 +89,25 @@ fn main() {
         }
     });
 
+    let mut stdout = BufWriter::new(std::io::stdout());
+
     loop {
         match mbatch.next() {
             Ok(Some((key, lines))) => {
                 if let Some(key) = key {
-                    print!("{}", key);
+                    stdout.write_all(key.as_bytes())?;
                 }
                 for (i, line) in lines.enumerate() {
-                    //TODO: write
                     if i > 0 {
-                        print!("{}", args.join);
+                        stdout.write_all(args.join.as_bytes())?;
                     }
-                    print!("{}", line);
+                    stdout.write_all(line.as_bytes())?;
                 }
-                println!();
+                stdout.write(b"\n")?;
+                stdout.flush()?;
             }
             Ok(None) => continue,
-            Err(_) => break,
+            Err(_) => return Ok(()),
         }
     }
 }
