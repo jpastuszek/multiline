@@ -1,0 +1,11 @@
+[package]
+name = "multiline"
+version = "0.1.0"
+authors = ["Jakub Pastuszek <jpastuszek@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+multistream-batch = { path = "../multistream-batch" }
+cotton = "0.0.1"
+structopt = "0.2.18"
+regex = "1.1.8"
