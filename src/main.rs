@@ -1,9 +1,9 @@
 use cotton::prelude::*;
-use multistream_batch::MultistreamBatchChannel;
-use multistream_batch::Command::*;
+use multistream_batch::channel::multi_buf_batch::{MultBufBatchChannel, Command};
 use std::io::{BufReader, BufWriter};
 use std::time::Duration;
 use regex::Regex;
+use Command::*;
 
 /// Combine multiline log messages into single line joined with special sequence
 #[derive(Debug, StructOpt)]
@@ -54,7 +54,7 @@ fn main() -> Result<(), Problem> {
     let match_last = args.match_last;
     let strip_pattern = args.strip_pattern;
 
-    let mut mbatch = MultistreamBatchChannel::with_producer_thread(args.max_size, Duration::from_millis(args.max_duration_ms), args.max_size * 2, move |sender| {
+    let mut mbatch = MultBufBatchChannel::with_producer_thread(args.max_size, Duration::from_millis(args.max_duration_ms), args.max_size * 2, move |sender| {
         for line in BufReader::new(std::io::stdin()).lines().or_failed_to("read lines from STDIN") {
             let (stream_id, line) = if let Some(stream_id_regex) = stream_id_regex.as_ref() {
                 let stream_id = stream_id_regex.find(&line).map(|m| m.as_str().to_owned());
@@ -93,7 +93,7 @@ fn main() -> Result<(), Problem> {
 
     loop {
         match mbatch.next() {
-            Ok(Some((key, lines))) => {
+            Ok((key, lines)) => {
                 if let Some(key) = key {
                     stdout.write_all(key.as_bytes())?;
                 }
@@ -106,7 +106,6 @@ fn main() -> Result<(), Problem> {
                 stdout.write(b"\n")?;
                 stdout.flush()?;
             }
-            Ok(None) => continue,
             Err(_) => return Ok(()),
         }
     }
