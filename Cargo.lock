@@ -208,7 +208,7 @@ name = "multiline"
 version = "0.1.0"
 dependencies = [
  "cotton 0.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "multistream-batch 0.1.0",
+ "multistream-batch 0.1.0 (git+https://github.com/jpastuszek/multistream-batch)",
  "regex 1.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "structopt 0.2.18 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -216,6 +216,7 @@ dependencies = [
 [[package]]
 name = "multistream-batch"
 version = "0.1.0"
+source = "git+https://github.com/jpastuszek/multistream-batch#389c0e78732a20fca0e904718f5c8217d96602bd"
 dependencies = [
  "crossbeam-channel 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "linked-hash-map 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -587,6 +588,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum linked-hash-map 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)" = "ae91b68aebc4ddb91978b11a1b02ddd8602a05ec19002801c5666000e05e0f83"
 "checksum log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)" = "c84ec4b527950aa83a329754b01dbe3f58361d1c5efacd1f6d68c494d08a17c6"
 "checksum memchr 2.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "88579771288728879b57485cc7d6b07d648c9f0141eb955f8ab7f9d45394468e"
+"checksum multistream-batch 0.1.0 (git+https://github.com/jpastuszek/multistream-batch)" = "<none>"
 "checksum numtoa 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "b8f8bdf33df195859076e54ab11ee78a1b208382d3a26ec40d142ffc1ecc49ef"
 "checksum problem 5.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "5eebcaddac13b19525a20492866ea9d94b0ef4e1a37dab7b1a113250de317b3d"
 "checksum proc-macro2 0.4.30 (registry+https://github.com/rust-lang/crates.io-index)" = "cf3d2011ab5c909338f7887f4fc896d35932e29146c12c8d01da6b22a80ba759"
