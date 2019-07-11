@@ -5,42 +5,42 @@ use std::time::Duration;
 use regex::Regex;
 use Command::*;
 
-/// Combine multiline log messages into single line joined with special sequence
+/// Join multiple log lines into single line.
 #[derive(Debug, StructOpt)]
 struct Cli {
     #[structopt(flatten)]
     logging: LoggingOpt,
 
-    /// Regex to match stream ID if to demultiplex multiple streams
-    #[structopt(long = "stream-id-pattern")]
+    /// Regex to match stream ID to demultiplex ordered streams of log lines by
+    #[structopt(long = "stream-id-pattern", short = "i")]
     stream_id_pattern: Option<String>,
 
-    /// Regex to match first or last line of a multiline message
-    #[structopt(long = "pattern")]
-    pattern: String,
+    /// Regex to match first or last line of a message
+    #[structopt(long = "message-pattern", short = "p")]
+    message_pattern: String,
 
     /// Negate the pattern
-    #[structopt(long = "negate")]
+    #[structopt(long = "negate", short = "n")]
     negate: bool,
 
-    /// Match last line of multiline message instead of first
-    #[structopt(long = "match-last")]
+    /// Match last line of single message instead of first
+    #[structopt(long = "match-last", short = "l")]
     match_last: bool,
 
     /// Strip matched pattern from line
-    #[structopt(long = "strip-pattern")]
+    #[structopt(long = "strip-pattern", short = "s")]
     strip_pattern: bool,
 
-    /// String to join multiple lines of single message together
-    #[structopt(long = "join", default_value = "/012")]
+    /// String used to join the lines of a single message with
+    #[structopt(long = "join", default_value = "/012", short = "j")]
     join: String,
 
-    /// Maximum number of lines in single message
-    #[structopt(long = "max-size", default_value = "2000")]
+    /// Maximum number of lines a single message can collect before flushing
+    #[structopt(long = "max-size", default_value = "2000", short = "S")]
     max_size: usize,
 
-    /// Maximum duration single message will be collecting lines for in milliseconds
-    #[structopt(long = "max-duration", default_value = "200")]
+    /// Maximum time duration in milliseconds a single message will be collecting lines for before flushing
+    #[structopt(long = "max-duration", default_value = "200", short = "D")]
     max_duration_ms: u64,
 }
 
@@ -49,7 +49,7 @@ fn main() -> Result<(), Problem> {
     init_logger(&args.logging, vec![module_path!()]);
 
     let stream_id_regex = args.stream_id_pattern.map(|pattern| Regex::new(&pattern).or_failed_to("compile regex for stream-id-pattern"));
-    let pattern = Regex::new(&args.pattern).or_failed_to("compile regex for pattern");
+    let pattern = Regex::new(&args.message_pattern).or_failed_to("compile regex for pattern");
     let negate = args.negate;
     let match_last = args.match_last;
     let strip_pattern = args.strip_pattern;
