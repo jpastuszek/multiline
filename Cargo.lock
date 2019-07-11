@@ -216,7 +216,7 @@ dependencies = [
 [[package]]
 name = "multistream-batch"
 version = "0.1.0"
-source = "git+https://github.com/jpastuszek/multistream-batch#389c0e78732a20fca0e904718f5c8217d96602bd"
+source = "git+https://github.com/jpastuszek/multistream-batch#1e4697657b767ad1d35ac183d2451c03dac44c90"
 dependencies = [
  "crossbeam-channel 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "linked-hash-map 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)",

@@ -1,5 +1,5 @@
 use cotton::prelude::*;
-use multistream_batch::channel::multi_buf_batch::{MultBufBatchChannel, Command};
+use multistream_batch::channel::multi_buf_batch::{MultiBufBatchChannel, Command};
 use std::io::{BufReader, BufWriter};
 use std::time::Duration;
 use regex::Regex;
@@ -54,7 +54,7 @@ fn main() -> Result<(), Problem> {
     let match_last = args.match_last;
     let strip_pattern = args.strip_pattern;
 
-    let mut mbatch = MultBufBatchChannel::with_producer_thread(args.max_size, Duration::from_millis(args.max_duration_ms), args.max_size * 2, move |sender| {
+    let mut mbatch = MultiBufBatchChannel::with_producer_thread(args.max_size, Duration::from_millis(args.max_duration_ms), args.max_size * 2, move |sender| {
         for line in BufReader::new(std::io::stdin()).lines().or_failed_to("read lines from STDIN") {
             let (stream_id, line) = if let Some(stream_id_regex) = stream_id_regex.as_ref() {
                 let stream_id = stream_id_regex.find(&line).map(|m| m.as_str().to_owned());
@@ -78,11 +78,11 @@ fn main() -> Result<(), Problem> {
             if match_last {
                 sender.send(Append(stream_id.clone(), line)).unwrap();
                 if matched {
-                    sender.send(Drain(stream_id)).unwrap();
+                    sender.send(Flush(stream_id)).unwrap();
                 }
             } else {
                 if matched {
-                    sender.send(Drain(stream_id.clone())).unwrap();
+                    sender.send(Flush(stream_id.clone())).unwrap();
                 }
                 sender.send(Append(stream_id, line)).unwrap();
             }
