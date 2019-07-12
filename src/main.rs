@@ -4,6 +4,8 @@ use std::io::{BufReader, BufWriter};
 use std::time::Duration;
 use regex::Regex;
 use Command::*;
+use chrono::offset::Utc;
+use chrono::SecondsFormat;
 
 /// Join multiple log lines into single line.
 #[derive(Debug, StructOpt)]
@@ -42,6 +44,10 @@ struct Cli {
     /// Maximum time duration in milliseconds a single message will be collecting lines for before flushing
     #[structopt(long = "max-duration", default_value = "200", short = "D")]
     max_duration_ms: u64,
+
+    /// Timestamp log messages
+    #[structopt(long = "timestamp", short = "t")]
+    timestamp: bool,
 }
 
 fn main() -> Result<(), Problem> {
@@ -53,6 +59,7 @@ fn main() -> Result<(), Problem> {
     let negate = args.negate;
     let match_last = args.match_last;
     let strip_pattern = args.strip_pattern;
+    let timestamp = args.timestamp;
 
     let mut mbatch = MultiBufBatchChannel::with_producer_thread(args.max_size, Duration::from_millis(args.max_duration_ms), args.max_size * 2, move |sender| {
         for line in BufReader::new(std::io::stdin()).lines().or_failed_to("read lines from STDIN") {
@@ -79,8 +86,14 @@ fn main() -> Result<(), Problem> {
                 info!("[{}] {}", if matched { "\u{2714}" } else { "\u{2715}" }, line);
             }
 
+            let timestamp = if timestamp {
+                Some(Utc::now())
+            } else {
+                None
+            };
+
             if match_last {
-                sender.send(Append(stream_id.clone(), line)).unwrap();
+                sender.send(Append(stream_id.clone(), (timestamp, line))).unwrap();
                 if matched {
                     sender.send(Flush(stream_id)).unwrap();
                 }
@@ -88,7 +101,7 @@ fn main() -> Result<(), Problem> {
                 if matched {
                     sender.send(Flush(stream_id.clone())).unwrap();
                 }
-                sender.send(Append(stream_id, line)).unwrap();
+                sender.send(Append(stream_id, (timestamp, line))).unwrap();
             }
         }
     });
@@ -97,11 +110,22 @@ fn main() -> Result<(), Problem> {
 
     loop {
         match mbatch.next() {
-            Ok((stream_id, lines)) => {
+            Ok((stream_id, mut lines)) => {
                 if let Some(stream_id) = &stream_id {
                     stdout.write_all(stream_id.as_bytes())?;
                 }
-                for (i, line) in lines.enumerate() {
+
+                // Use timestamp of first line of the message
+                let (first_timestamp, head) = lines.next().unwrap();
+
+                if timestamp {
+                    if let Some(timestamp) = first_timestamp {
+                        stdout.write_all(timestamp.to_rfc3339_opts(SecondsFormat::Micros, true).as_bytes())?;
+                        stdout.write_all(b" ")?;
+                    }
+                }
+
+                for (i, line) in std::iter::once(head).chain(lines.map(|(_timestamp, line)| line)).enumerate() {
                     if let Some(stream_id) = &stream_id {
                         debug!("[{:?}/{}] {}", stream_id, i, line);
                     } else {
@@ -112,7 +136,7 @@ fn main() -> Result<(), Problem> {
                     }
                     stdout.write_all(line.as_bytes())?;
                 }
-                stdout.write(b"\n")?;
+                stdout.write_all(b"\n")?;
                 stdout.flush()?;
             }
             Err(_) => return Ok(()),

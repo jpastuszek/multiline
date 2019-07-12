@@ -9,3 +9,4 @@ multistream-batch = { git = "https://github.com/jpastuszek/multistream-batch" }
 cotton = "0.0.1"
 structopt = "0.2.18"
 regex = "1.1.8"
+chrono = "0.4.7"
