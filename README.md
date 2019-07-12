@@ -1,3 +1,7 @@
+`multiline` is a CLI utility that can be used to transform realtime log streams (e.g. from application log file) that contain entries spanning multiple lines into streams with one log entry per line.
+
+It can be useful as pre-processing step before sending log file data to syslog which would otherwise interpret entries spanning over multiple lines as separate entries one per line.
+
 # Example usage
 
 ## Multiline
