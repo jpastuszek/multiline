@@ -21,7 +21,7 @@ Real time processing parameters can be configured with `--max-size` flag which l
 Match every line that starts with space as belonging to previous message with `negate`.
 
 ```sh
-multiline --message-pattern '^\s' --negate --join " " <<EOF
+multiline --message-pattern '^\s+' --negate --strip-pattern --join "; " <<EOF
 Exception in thread "main" java.lang.NullPointerException
         at com.example.myproject.Book.getTitle(Book.java:16)
         at com.example.myproject.Author.getBookTitles(Author.java:25)
@@ -40,10 +40,10 @@ EOF
 
 Produces:
 ```
-Exception in thread "main" java.lang.NullPointerException         at com.example.myproject.Book.getTitle(Book.java:16)         at com.example.myproject.Author.getBookTitles(Author.java:25)         at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
-Exception in thread "main" java.lang.NullPointerException         at com.example.myproject.Book.getTitle(Book.java:16)         at com.example.myproject.Author.getBookTitles(Author.java:25)         at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
+Exception in thread "main" java.lang.NullPointerException; at com.example.myproject.Book.getTitle(Book.java:16); at com.example.myproject.Author.getBookTitles(Author.java:25); at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
+Exception in thread "main" java.lang.NullPointerException; at com.example.myproject.Book.getTitle(Book.java:16); at com.example.myproject.Author.getBookTitles(Author.java:25); at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
 Hello world!
-Exception in thread "main" java.lang.NullPointerException         at com.example.myproject.Book.getTitle(Book.java:16)         at com.example.myproject.Author.getBookTitles(Author.java:25)         at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
+Exception in thread "main" java.lang.NullPointerException; at com.example.myproject.Book.getTitle(Book.java:16); at com.example.myproject.Author.getBookTitles(Author.java:25); at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
 ```
 
 ### Joining lines ending with special escape
@@ -52,29 +52,29 @@ Use `match-last` with `negate` to anchor on the lines without the escape.
 Add `strip-pattern` to ensure that the escape is not part of the output.
 
 ```sh
-multiline --message-pattern ' \\$' --negate --match-last --join " " --strip-pattern <<EOF
-Exception in thread "main" java.lang.NullPointerException \
-        at com.example.myproject.Book.getTitle(Book.java:16) \
-        at com.example.myproject.Author.getBookTitles(Author.java:25) \
-        at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
-Exception in thread "main" java.lang.NullPointerException \
-        at com.example.myproject.Book.getTitle(Book.java:16) \
-        at com.example.myproject.Author.getBookTitles(Author.java:25) \
-        at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
+multiline --message-pattern ' >$' --negate --match-last --strip-pattern --join "; " <<EOF
+Exception in thread "main" java.lang.NullPointerException >
+at com.example.myproject.Book.getTitle(Book.java:16) >
+at com.example.myproject.Author.getBookTitles(Author.java:25) >
+at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
+Exception in thread "main" java.lang.NullPointerException >
+at com.example.myproject.Book.getTitle(Book.java:16) >
+at com.example.myproject.Author.getBookTitles(Author.java:25) >
+at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
 Hello world!
-Exception in thread "main" java.lang.NullPointerException \
-        at com.example.myproject.Book.getTitle(Book.java:16) \
-        at com.example.myproject.Author.getBookTitles(Author.java:25) \
-        at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
+Exception in thread "main" java.lang.NullPointerException >
+at com.example.myproject.Book.getTitle(Book.java:16) >
+at com.example.myproject.Author.getBookTitles(Author.java:25) >
+at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
 EOF
 ```
 
 Produces:
 ```
-Exception in thread "main" java.lang.NullPointerException         at com.example.myproject.Book.getTitle(Book.java:16)         at com.example.myproject.Author.getBookTitles(Author.java:25)         at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
-Exception in thread "main" java.lang.NullPointerException         at com.example.myproject.Book.getTitle(Book.java:16)         at com.example.myproject.Author.getBookTitles(Author.java:25)         at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
+Exception in thread "main" java.lang.NullPointerException; at com.example.myproject.Book.getTitle(Book.java:16); at com.example.myproject.Author.getBookTitles(Author.java:25); at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
+Exception in thread "main" java.lang.NullPointerException; at com.example.myproject.Book.getTitle(Book.java:16); at com.example.myproject.Author.getBookTitles(Author.java:25); at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
 Hello world!
-Exception in thread "main" java.lang.NullPointerException         at com.example.myproject.Book.getTitle(Book.java:16)         at com.example.myproject.Author.getBookTitles(Author.java:25)         at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
+Exception in thread "main" java.lang.NullPointerException; at com.example.myproject.Book.getTitle(Book.java:16); at com.example.myproject.Author.getBookTitles(Author.java:25); at com.example.myproject.Bootstrap.main(Bootstrap.java:14)
 ```
 
 ### Join messages from multiple interlaced streams of log data

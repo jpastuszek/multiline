@@ -73,7 +73,11 @@ fn main() -> Result<(), Problem> {
 
             let matched = if negate { !matched } else { matched };
 
-            debug!("[{:?}] ({:?}) {}", stream_id, matched, line);
+            if let Some(stream_id) = &stream_id {
+                info!("[{:?}/{}] {}", stream_id, if matched { "\u{2714}" } else { "\u{2715}" }, line);
+            } else {
+                info!("[{}] {}", if matched { "\u{2714}" } else { "\u{2715}" }, line);
+            }
 
             if match_last {
                 sender.send(Append(stream_id.clone(), line)).unwrap();
@@ -93,11 +97,16 @@ fn main() -> Result<(), Problem> {
 
     loop {
         match mbatch.next() {
-            Ok((key, lines)) => {
-                if let Some(key) = key {
-                    stdout.write_all(key.as_bytes())?;
+            Ok((stream_id, lines)) => {
+                if let Some(stream_id) = &stream_id {
+                    stdout.write_all(stream_id.as_bytes())?;
                 }
                 for (i, line) in lines.enumerate() {
+                    if let Some(stream_id) = &stream_id {
+                        debug!("[{:?}/{}] {}", stream_id, i, line);
+                    } else {
+                        debug!("[{}] {}", i, line);
+                    }
                     if i > 0 {
                         stdout.write_all(args.join.as_bytes())?;
                     }
