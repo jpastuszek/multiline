@@ -32,7 +32,7 @@ struct Cli {
     strip_pattern: bool,
 
     /// String used to join the lines of a single message with
-    #[structopt(long = "join", default_value = "/012", short = "j")]
+    #[structopt(long = "join", default_value = "#012", short = "j")]
     join: String,
 
     /// Maximum number of lines a single message can collect before flushing
