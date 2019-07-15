@@ -225,7 +225,7 @@ version = "0.1.0"
 dependencies = [
  "chrono 0.4.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "cotton 0.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "multistream-batch 0.1.0 (git+https://github.com/jpastuszek/multistream-batch)",
+ "multistream-batch 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 1.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "structopt 0.2.18 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -233,7 +233,7 @@ dependencies = [
 [[package]]
 name = "multistream-batch"
 version = "0.1.0"
-source = "git+https://github.com/jpastuszek/multistream-batch#7bfeb061cc3680f711e9951d44dea9644f8d19b9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "crossbeam-channel 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "linked-hash-map 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -634,7 +634,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum linked-hash-map 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)" = "ae91b68aebc4ddb91978b11a1b02ddd8602a05ec19002801c5666000e05e0f83"
 "checksum log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)" = "c84ec4b527950aa83a329754b01dbe3f58361d1c5efacd1f6d68c494d08a17c6"
 "checksum memchr 2.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "88579771288728879b57485cc7d6b07d648c9f0141eb955f8ab7f9d45394468e"
-"checksum multistream-batch 0.1.0 (git+https://github.com/jpastuszek/multistream-batch)" = "<none>"
+"checksum multistream-batch 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "31664d4ade8963978553692ae5386af23bb44007f693134a97d67ad6eeed5024"
 "checksum num-integer 0.1.41 (registry+https://github.com/rust-lang/crates.io-index)" = "b85e541ef8255f6cf42bbfe4ef361305c6c135d10919ecc26126c4e5ae94bc09"
 "checksum num-traits 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)" = "6ba9a427cfca2be13aa6f6403b0b7e7368fe982bfa16fccc450ce74c46cd9b32"
 "checksum numtoa 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "b8f8bdf33df195859076e54ab11ee78a1b208382d3a26ec40d142ffc1ecc49ef"
