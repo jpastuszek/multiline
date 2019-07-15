@@ -1,3 +1,5 @@
+[![Latest Version]][crates.io] [![Documentation]][docs.rs] ![License]
+
 # Multiline
 
 `multiline` is a CLI utility that can be used to transform realtime log message streams (e.g. log entries from application log file) that contain messages spanning multiple lines (e.g. stack traces) into streams with one message per line.
@@ -145,3 +147,9 @@ Produces:
 2019-07-12T13:29:14.487547Z 9
 2019-07-12T13:29:14.690270Z 10
 ```
+
+[crates.io]: https://crates.io/crates/multiline
+[Latest Version]: https://img.shields.io/crates/v/multiline.svg
+[Documentation]: https://docs.rs/multiline/badge.svg
+[docs.rs]: https://docs.rs/multiline
+[License]: https://img.shields.io/crates/l/multiline.svg
