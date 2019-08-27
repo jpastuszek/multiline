@@ -221,7 +221,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "multiline"
-version = "0.1.1-alpha.0"
+version = "0.1.1"
 dependencies = [
  "chrono 0.4.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "cotton 0.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
